@@ -1,7 +1,5 @@
 # Laboratorio 5 Contenedores
 
-Repositorio: https://github.com/tomlaura-bit/lab5
-
 ## Requisitos
 
 - Docker Desktop
