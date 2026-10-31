@@ -2,6 +2,8 @@
 
 Solución de las dos preguntas del laboratorio. Cada aplicación incluye interfaz web, lógica de negocio, acceso a datos, PostgreSQL, Dockerfile, Docker Compose, variables de entorno y volumen persistente.
 
+Repositorio: https://github.com/tomlaura-bit/lab5
+
 ## Estructura
 
 - `pregunta1-champions`: gestión de partidos y predicciones de Champions League.
@@ -44,6 +46,11 @@ docker compose -f pregunta2-marketing/docker-compose.yml run --rm app pytest -q
 ```
 
 ## Publicación de imágenes
+
+Las imágenes se publican automáticamente mediante GitHub Actions:
+
+- `ghcr.io/tomlaura-bit/el3302-champions:latest`
+- `ghcr.io/tomlaura-bit/el3302-marketing:latest`
 
 ```bash
 docker login

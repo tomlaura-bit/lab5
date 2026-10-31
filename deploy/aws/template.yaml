@@ -1,0 +1,46 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: EL3302 Laboratorio 5
+Parameters:
+  LatestUbuntuAmi:
+    Type: AWS::SSM::Parameter::Value<AWS::EC2::Image::Id>
+    Default: /aws/service/canonical/ubuntu/server/24.04/stable/current/amd64/hvm/ebs-gp3/ami-id
+Resources:
+  LabSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: EL3302 Lab 5 web access
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 8001
+          ToPort: 8002
+          CidrIp: 0.0.0.0/0
+  LabInstance:
+    Type: AWS::EC2::Instance
+    Properties:
+      ImageId: !Ref LatestUbuntuAmi
+      InstanceType: t3.small
+      SecurityGroupIds:
+        - !GetAtt LabSecurityGroup.GroupId
+      Tags:
+        - Key: Name
+          Value: el3302-lab5
+      UserData:
+        Fn::Base64: !Sub |
+          #!/bin/bash
+          set -e
+          apt-get update
+          apt-get install -y ca-certificates curl git
+          curl -fsSL https://get.docker.com | sh
+          git clone https://github.com/tomlaura-bit/lab5.git /opt/el3302-lab5
+          cd /opt/el3302-lab5/pregunta1-champions
+          docker compose up --build -d
+          cd /opt/el3302-lab5/pregunta2-marketing
+          docker compose up --build -d
+Outputs:
+  PublicIp:
+    Value: !GetAtt LabInstance.PublicIp
+  ChampionsUrl:
+    Value: !Sub http://${LabInstance.PublicDnsName}:8001
+  MarketingUrl:
+    Value: !Sub http://${LabInstance.PublicDnsName}:8002
+

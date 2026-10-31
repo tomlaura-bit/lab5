@@ -1,4 +1,4 @@
-# Despliegue en AWS EC2
+# Despliegue en AWS EC2 us-east-2
 
 ## Requisitos
 
@@ -6,6 +6,10 @@
 - Instancia Ubuntu 24.04 con puertos 22, 80, 8001 y 8002 habilitados en el grupo de seguridad.
 - Docker Hub o GitHub Container Registry.
 - Dominio HTTPS público para publicación real en Instagram.
+
+## Despliegue automático con CloudFormation
+
+En la región `us-east-2`, crear una pila usando `deploy/aws/template.yaml`. La plantilla crea un grupo de seguridad, una instancia Ubuntu `t3.small`, instala Docker, clona el repositorio y levanta las dos aplicaciones. Las salidas de la pila muestran la IP pública y las dos URL.
 
 ## Publicación
 
@@ -24,7 +28,7 @@ sudo apt-get update
 sudo apt-get install -y ca-certificates curl git
 curl -fsSL https://get.docker.com | sudo sh
 sudo usermod -aG docker ubuntu
-git clone URL_DEL_REPOSITORIO el3302-lab5
+git clone https://github.com/tomlaura-bit/lab5.git el3302-lab5
 cd el3302-lab5
 ```
 
