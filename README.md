@@ -1,29 +1,5 @@
 # Laboratorio 5 Contenedores
 
-## Requisitos
-
-- Docker Desktop
-- Docker Compose
-
-## Estructura
-
-```text
-EL3302_LAB5/
-├── pregunta1-champions/
-│   ├── app/
-│   ├── mock_api/
-│   ├── .env.example
-│   ├── Dockerfile
-│   ├── docker-compose.yml
-│   └── requirements.txt
-└── pregunta2-marketing/
-    ├── app/
-    ├── .env.example
-    ├── Dockerfile
-    ├── docker-compose.yml
-    └── requirements.txt
-```
-
 ## Pregunta 1
 
 Aplicación web en tres capas para consultar partidos de Champions League y registrar predicciones.
