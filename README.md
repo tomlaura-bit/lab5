@@ -1,73 +1,123 @@
-# EL3302 Laboratorio 5 Contenedores
-
-Solución de las dos preguntas del laboratorio. Cada aplicación incluye interfaz web, lógica de negocio, acceso a datos, PostgreSQL, Dockerfile, Docker Compose, variables de entorno y volumen persistente.
+# Laboratorio 5 Contenedores
 
 Repositorio: https://github.com/tomlaura-bit/lab5
 
+## Requisitos
+
+- Docker Desktop
+- Docker Compose
+
 ## Estructura
 
-- `pregunta1-champions`: gestión de partidos y predicciones de Champions League.
-- `pregunta2-marketing`: generación de campañas a partir de una fotografía.
-- `docs`: arquitectura, flujo de datos, despliegue y guion del video.
-- `evidencias`: capturas del funcionamiento.
-- `informe`: informe final en Word.
+```text
+EL3302_LAB5/
+├── pregunta1-champions/
+│   ├── app/
+│   ├── mock_api/
+│   ├── .env.example
+│   ├── Dockerfile
+│   ├── docker-compose.yml
+│   └── requirements.txt
+└── pregunta2-marketing/
+    ├── app/
+    ├── .env.example
+    ├── Dockerfile
+    ├── docker-compose.yml
+    └── requirements.txt
+```
 
-## Ejecución de la Pregunta 1
+## Pregunta 1
 
-```bash
+Aplicación web en tres capas para consultar partidos de Champions League y registrar predicciones.
+
+```text
+Navegador -> Presentación -> Lógica de negocio -> Acceso a datos -> PostgreSQL
+                                   |
+                                   -> API simulada de partidos
+```
+
+Al iniciar, la aplicación consulta la API simulada y guarda los partidos en PostgreSQL. Las predicciones se registran y consultan desde la misma base de datos.
+
+### Instalación y ejecución
+
+```powershell
 cd pregunta1-champions
+Copy-Item .env.example .env
 docker compose up --build -d
 ```
 
-Abrir `http://localhost:8001`.
+Abrir http://localhost:8001
 
-```bash
+Para detener la aplicación:
+
+```powershell
 docker compose down
 ```
 
-## Ejecución de la Pregunta 2
+## Pregunta 2
 
-```bash
+Aplicación web que recibe una fotografía, propone tres guiones, permite escoger uno, genera tres imágenes y un video, y publica la campaña en modo simulado o mediante Instagram Graph API.
+
+```text
+Navegador -> Presentación -> Lógica de negocio -> PostgreSQL
+                                   |
+                                   -> Archivos persistentes
+                                   -> Instagram Graph API
+```
+
+### Instalación y ejecución
+
+```powershell
 cd pregunta2-marketing
+Copy-Item .env.example .env
 docker compose up --build -d
 ```
 
-Abrir `http://localhost:8002`.
+Abrir http://localhost:8002
 
-```bash
+Para detener la aplicación:
+
+```powershell
 docker compose down
 ```
 
-## Pruebas
+El modo predeterminado es `simulation`. Para publicar en Instagram se debe editar `.env`:
 
-```bash
-docker compose -f pregunta1-champions/docker-compose.yml run --rm app pytest -q
-docker compose -f pregunta2-marketing/docker-compose.yml run --rm app pytest -q
+```env
+SOCIAL_MODE=instagram
+PUBLIC_BASE_URL=https://dominio-publico
+INSTAGRAM_USER_ID=identificador
+INSTAGRAM_ACCESS_TOKEN=token
 ```
 
-## Publicación de imágenes
+## Persistencia
 
-Las imágenes se publican automáticamente mediante GitHub Actions:
+Docker Compose crea los volúmenes `champions_data`, `marketing_data` y `marketing_assets`. El comando `docker compose down` conserva la información.
+
+## Imágenes publicadas
 
 - `ghcr.io/tomlaura-bit/el3302-champions:latest`
 - `ghcr.io/tomlaura-bit/el3302-marketing:latest`
 
+## Despliegue en AWS EC2
+
+Crear una instancia Ubuntu en `us-east-2` y permitir los puertos `22`, `8001` y `8002`. Conectarse por SSH y ejecutar:
+
 ```bash
-docker login
-docker build -t USUARIO/el3302-champions:1.0 pregunta1-champions
-docker push USUARIO/el3302-champions:1.0
-docker build -t USUARIO/el3302-marketing:1.0 pregunta2-marketing
-docker push USUARIO/el3302-marketing:1.0
+sudo apt update
+sudo apt install -y git docker.io docker-compose-v2
+sudo usermod -aG docker $USER
+newgrp docker
+git clone https://github.com/tomlaura-bit/lab5.git
+cd lab5/pregunta1-champions
+cp .env.example .env
+docker compose up --build -d
+cd ../pregunta2-marketing
+cp .env.example .env
+docker compose up --build -d
 ```
 
-## Despliegue
+Accesos:
 
-El procedimiento completo para AWS EC2 está en `docs/despliegue-aws.md`. Requiere una cuenta AWS, una clave SSH y credenciales del registro elegido.
-
-## Entregables
-
-- Código fuente ejecutable.
-- Diagramas y flujo de datos.
-- Informe con evidencias.
-- Guion de demostración menor a cinco minutos.
-
+- `http://IP_PUBLICA:8001`
+- `http://IP_PUBLICA:8002`

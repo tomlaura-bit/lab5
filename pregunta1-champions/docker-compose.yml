@@ -2,9 +2,9 @@ services:
   db:
     image: postgres:16-alpine
     environment:
-      POSTGRES_DB: champions
-      POSTGRES_USER: champions
-      POSTGRES_PASSWORD: champions
+      POSTGRES_DB: ${POSTGRES_DB:-champions}
+      POSTGRES_USER: ${POSTGRES_USER:-champions}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-champions}
     volumes:
       - champions_data:/var/lib/postgresql/data
     healthcheck:
@@ -19,8 +19,8 @@ services:
   app:
     build: .
     environment:
-      DATABASE_URL: postgresql+psycopg://champions:champions@db:5432/champions
-      MATCHES_API_URL: http://mock-api:8100/matches
+      DATABASE_URL: ${DATABASE_URL:-postgresql+psycopg://champions:champions@db:5432/champions}
+      MATCHES_API_URL: ${MATCHES_API_URL:-http://mock-api:8100/matches}
     ports:
       - "8001:8000"
     depends_on:
