@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Champions Predictor</title>
+  <link rel="stylesheet" href="/static/styles.css">
+</head>
+<body>
+  <header>
+    <p>EL3302 · Laboratorio 5</p>
+    <h1>Champions Predictor</h1>
+    <span>Partidos y predicciones persistentes</span>
+  </header>
+  <main>
+    <section>
+      <div class="section-title"><h2>Partidos almacenados</h2><strong>{{ matches|length }}</strong></div>
+      <div class="matches">
+        {% for match in matches %}
+        <article>
+          <time>{{ match.kickoff.strftime('%d/%m/%Y · %H:%M') }}</time>
+          <h3>{{ match.home_team }} <span>vs</span> {{ match.away_team }}</h3>
+          <p>{{ match.venue }}</p>
+          <button type="button" data-match="{{ match.id }}" data-name="{{ match.home_team }} vs {{ match.away_team }}">Predecir</button>
+        </article>
+        {% endfor %}
+      </div>
+    </section>
+    <section id="prediction-form">
+      <div class="section-title"><h2>Registrar predicción</h2></div>
+      <form action="/predictions" method="post">
+        <label>Partido<select name="match_id" id="match_id" required>{% for match in matches %}<option value="{{ match.id }}">{{ match.home_team }} vs {{ match.away_team }}</option>{% endfor %}</select></label>
+        <label>Participante<input name="participant" required maxlength="100" placeholder="Nombre"></label>
+        <label>Resultado<select name="result" required><option value="LOCAL">Gana local</option><option value="VISITA">Gana visita</option><option value="EMPATE">Empate</option></select></label>
+        <div class="score"><label>Local<input type="number" name="home_score" min="0" max="20" value="1" required></label><label>Visita<input type="number" name="away_score" min="0" max="20" value="0" required></label></div>
+        <button type="submit">Guardar predicción</button>
+      </form>
+    </section>
+    <section id="predictions">
+      <div class="section-title"><h2>Predicciones registradas</h2><strong>{{ predictions|length }}</strong></div>
+      <div class="table-wrap"><table><thead><tr><th>Partido</th><th>Participante</th><th>Resultado</th><th>Marcador</th></tr></thead><tbody>{% for item in predictions %}<tr><td>{{ item.match.home_team }} vs {{ item.match.away_team }}</td><td>{{ item.participant }}</td><td>{{ item.result }}</td><td>{{ item.home_score }} - {{ item.away_score }}</td></tr>{% else %}<tr><td colspan="4">Aún no hay predicciones.</td></tr>{% endfor %}</tbody></table></div>
+    </section>
+  </main>
+  <script src="/static/app.js"></script>
+</body>
+</html>
+

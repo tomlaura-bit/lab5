@@ -1,0 +1,14 @@
+<!doctype html>
+<html lang="es">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>{{ campaign.product }} · Campaign Lab</title><link rel="stylesheet" href="/static/styles.css"></head>
+<body>
+  <nav><a href="/">← Campañas</a><strong>{{ campaign.company }}</strong><span>{{ campaign.status }}</span></nav>
+  <main>
+    <section class="hero"><img src="/assets/{{ campaign.original_path }}"><div><p>{{ campaign.audience }}</p><h1>{{ campaign.product }}</h1><span>Objetivo: {{ campaign.objective }}</span></div></section>
+    <section><h2>1. Escoge un guion</h2><form class="scripts" action="/campaigns/{{ campaign.id }}/select" method="post">{% for script in scripts %}<label><input type="radio" name="script_index" value="{{ loop.index0 }}" {% if campaign.selected_script == script %}checked{% endif %} required><span><b>Guion {{ loop.index }}</b>{{ script }}</span></label>{% endfor %}<button>Seleccionar guion</button></form></section>
+    <section><h2>2. Genera contenido</h2><form action="/campaigns/{{ campaign.id }}/generate" method="post"><button {% if not campaign.selected_script %}disabled{% endif %}>Generar 3 fotos y video</button></form><div class="assets">{% for asset in campaign.assets %}{% if asset.kind == 'IMAGE' %}<img src="/assets/{{ asset.path }}">{% else %}<video controls src="/assets/{{ asset.path }}"></video>{% endif %}{% endfor %}</div></section>
+    <section id="publish"><h2>3. Publica</h2><form action="/campaigns/{{ campaign.id }}/publish" method="post"><button {% if not campaign.assets %}disabled{% endif %}>Publicar en Instagram</button></form>{% if campaign.social_id %}<p class="published">Publicación confirmada: {{ campaign.social_id }}</p>{% endif %}</section>
+  </main>
+</body>
+</html>
+

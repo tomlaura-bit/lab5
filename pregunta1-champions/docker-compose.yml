@@ -1,0 +1,33 @@
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: champions
+      POSTGRES_USER: champions
+      POSTGRES_PASSWORD: champions
+    volumes:
+      - champions_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U champions -d champions"]
+      interval: 5s
+      timeout: 5s
+      retries: 12
+  mock-api:
+    build: ./mock_api
+    ports:
+      - "8101:8100"
+  app:
+    build: .
+    environment:
+      DATABASE_URL: postgresql+psycopg://champions:champions@db:5432/champions
+      MATCHES_API_URL: http://mock-api:8100/matches
+    ports:
+      - "8001:8000"
+    depends_on:
+      db:
+        condition: service_healthy
+      mock-api:
+        condition: service_started
+volumes:
+  champions_data:
+

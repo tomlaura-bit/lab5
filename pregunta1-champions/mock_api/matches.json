@@ -1,0 +1,9 @@
+[
+  {"id":"ucl-001","home_team":"Real Madrid","away_team":"Manchester City","kickoff":"2026-11-03T20:00:00+00:00","venue":"Santiago Bernabéu"},
+  {"id":"ucl-002","home_team":"Bayern München","away_team":"Arsenal","kickoff":"2026-11-04T20:00:00+00:00","venue":"Allianz Arena"},
+  {"id":"ucl-003","home_team":"Paris Saint-Germain","away_team":"FC Barcelona","kickoff":"2026-11-05T20:00:00+00:00","venue":"Parc des Princes"},
+  {"id":"ucl-004","home_team":"Inter","away_team":"Liverpool","kickoff":"2026-11-24T20:00:00+00:00","venue":"San Siro"},
+  {"id":"ucl-005","home_team":"Benfica","away_team":"Atlético de Madrid","kickoff":"2026-11-25T20:00:00+00:00","venue":"Estádio da Luz"},
+  {"id":"ucl-006","home_team":"Borussia Dortmund","away_team":"Napoli","kickoff":"2026-11-26T20:00:00+00:00","venue":"Signal Iduna Park"}
+]
+

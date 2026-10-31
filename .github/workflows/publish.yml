@@ -1,0 +1,30 @@
+name: Publicar contenedores
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+jobs:
+  images:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    strategy:
+      matrix:
+        include:
+          - name: champions
+            context: pregunta1-champions
+          - name: marketing
+            context: pregunta2-marketing
+    steps:
+      - uses: actions/checkout@v4
+      - uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - uses: docker/build-push-action@v6
+        with:
+          context: ${{ matrix.context }}
+          push: true
+          tags: ghcr.io/${{ github.repository_owner }}/el3302-${{ matrix.name }}:latest

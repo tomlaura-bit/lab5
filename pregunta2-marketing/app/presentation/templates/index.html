@@ -1,0 +1,12 @@
+<!doctype html>
+<html lang="es">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Campaign Lab</title><link rel="stylesheet" href="/static/styles.css"></head>
+<body>
+  <header><p>EL3302 · Laboratorio 5</p><h1>Campaign Lab</h1><span>De una foto a una campaña lista para publicar</span></header>
+  <main>
+    <section><h2>Nueva campaña</h2><form action="/campaigns" method="post" enctype="multipart/form-data"><label>Empresa<input name="company" required placeholder="Andes Coffee"></label><label>Producto<input name="product" required placeholder="Cold Brew"></label><label>Público<input name="audience" required placeholder="jóvenes profesionales"></label><label>Objetivo<input name="objective" required placeholder="comprar en línea"></label><label class="photo">Fotografía<input type="file" name="photo" accept="image/*" required></label><button>Proponer 3 guiones</button></form></section>
+    <section><h2>Campañas</h2><div class="campaigns">{% for campaign in campaigns %}<a href="/campaigns/{{ campaign.id }}"><strong>{{ campaign.product }}</strong><span>{{ campaign.company }}</span><em>{{ campaign.status }}</em></a>{% else %}<p>Aún no hay campañas.</p>{% endfor %}</div></section>
+  </main>
+</body>
+</html>
+
